@@ -29,7 +29,12 @@ mf = {
         obj.dispatchEvent(evt);
     },
     on: function (obj, ev, callback) {
-        obj.addEventListener(ev, callback);
+        if (typeof ev == 'string') {
+            var _tmp = ev.split(',');
+        }
+        for (var i = 0; i < _tmp.length; i++) {
+            obj.addEventListener(_tmp[i].trim(), callback);
+        }
     },
     computedStyle: function (el) {
         return window.getComputedStyle ? getComputedStyle(el, "") : el.currentStyle;
@@ -297,7 +302,6 @@ mf = {
             };
         })();
     }
-    ;
 
     if (!Array.prototype.inArray) {
         (function () {
@@ -310,6 +314,19 @@ mf = {
             };
         })();
     }
-    ;
+
+    (function (e) {
+        e.closest = e.closest || function (css) {
+            var node = this;
+
+            while (node) {
+                if (node.matches(css))
+                    return node;
+                else
+                    node = node.parentElement;
+            }
+            return null;
+        }
+    })(Element.prototype);
 })();
 
