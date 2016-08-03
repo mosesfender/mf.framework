@@ -295,25 +295,40 @@ mf = {
         return format.replace(regex, doFormat);
     };
 
-    if (!String.prototype.trim) {
-        (function () {
-            String.prototype.trim = function () {
-                return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-            };
-        })();
-    }
+    /**
+     * @author Sergey Siunov
+     * String object extends
+     * @param {String} o
+     */
+    (function (o) {
+        o.toBool = o.toBool || function () {
+            var str = this;
+            if (typeof this == 'number')
+                str = str.toString();
+            str = str.toLowerCase();
+            return Boolean(str == 'true' || str == 'yes' || str == '1');
+        };
 
-    if (!Array.prototype.inArray) {
-        (function () {
-            Array.prototype.inArray = function (needle) {
-                for (var i = 0; i < this.length; i++) {
-                    if (this[i] == needle)
-                        return true;
-                }
-                return false;
-            };
-        })();
-    }
+        o.trim = o.trim || function () {
+            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        };
+    })(String.prototype);
+
+    /**
+     * @author Sergey Siunov
+     * Array object extends
+     * @param {Array.prototype} o
+     */
+
+    (function (o) {
+        o.inArray = o.inArray || function (needle) {
+            for (var i = 0; i < this.length; i++) {
+                if (this[i] == needle)
+                    return true;
+            }
+            return false;
+        };
+    })(Array.prototype);
 
     (function (e) {
         e.closest = e.closest || function (css) {
